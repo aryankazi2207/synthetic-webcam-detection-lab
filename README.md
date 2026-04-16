@@ -1,158 +1,183 @@
 # Synthetic Webcam Detection Lab
 
-Synthetic Webcam Detection Lab is a browser-based AI media detection workbench. It can generate labeled synthetic webcam-style clips, analyze uploaded photos and videos, and produce review reports with verdicts, confidence scores, risk levels, evidence metadata, and forensic-style exports.
+This project is a safe research workbench for studying synthetic-video and
+synthetic-image detection. It does **not** create impersonation deepfakes, does
+**not** remove labels or watermarks, and does **not** provide evasion guidance
+for bypassing detection systems.
 
-## Project Overview
+The app generates clearly labeled, webcam-like synthetic clips of mundane
+activities using browser canvas animation. It can also analyze uploaded local
+images and videos so you can prototype detection ideas before connecting real,
+consented datasets or approved model providers.
 
-This project was built to explore how synthetic media and deepfake-style content can be detected in a safe and responsible way. The system does not create impersonation deepfakes or attempt to bypass detection systems. Instead, it focuses on detection, review, evidence handling, and reporting.
+## What It Does
 
-The app runs locally in the browser. Uploaded files stay on the user’s device and are analyzed using browser APIs.
+- Generates labeled synthetic webcam-style clips for mundane scenes:
+  - watering house plants
+  - reading at a desk
+  - making coffee
+  - folding laundry
+- Simulates common webcam properties:
+  - low-light sensor noise
+  - frame jitter
+  - compression-like blocking
+  - timestamp overlay
+  - synthetic-content watermark
+- Records generated clips as WebM in the browser when MediaRecorder is
+  available.
+- Analyzes uploaded local images and videos without sending files anywhere.
+- Runs a baseline detector that scores temporal smoothness, noise consistency,
+  edge stability, watermark presence, metadata-like visual overlays, image
+  compression signals, and flat-color signals.
+- Produces production-style review fields:
+  - verdict
+  - confidence
+  - risk level
+  - recommended action
+  - detector version
+  - plugin-level signal report
+- Saves recent analysis history in browser localStorage.
+- Exports analysis history as CSV.
+- Exports analysis as JSON.
+- Adds case review controls, evidence hashing, and forensic HTML export.
 
-## Features
+## Run
 
-- Synthetic webcam-style video generation
-- Photo upload analysis
-- Video upload analysis
-- Local browser-based detection
-- Synthetic likelihood scoring
-- Verdict generation
-- Confidence scoring
-- Risk level classification
-- Plugin-style signal breakdown
-- Case ID and analyst metadata
-- Evidence source and analyst notes
-- SHA-256 evidence hashing
+Open `index.html` directly in a modern browser.
+
+## Generate A Synthetic Test Clip
+
+1. Choose a scene.
+2. Choose duration and webcam artifact strength.
+3. Click **Start Preview**.
+4. Click **Record Clip** to save a labeled WebM clip.
+5. Click **Analyze Current Frames** to score the generated stream.
+6. Click **Download Report JSON** to save the detector output.
+
+## Analyze Uploaded Photos Or Videos
+
+1. In **Analyze Uploaded Media**, click **Choose File**.
+2. Pick a local image or video file.
+3. Click **Analyze Upload**.
+4. Read the detector scores in **Detector Baseline**.
+5. Click **Download Report JSON** if you want to save the result.
+
+## Production Workbench Features
+
+This version is upgraded from a simple prototype into a local review workbench.
+Each completed analysis includes:
+
+- A verdict such as **Likely Synthetic**, **Suspicious**, **Needs Review**, or
+  **Low Synthetic Signal**
+- A confidence score
+- A risk level
+- A recommended human-review action
+- A detector version string
+- Plugin-level scores that explain which signals contributed to the result
+- A saved history row for audit and comparison
+- Case ID, analyst name, evidence source, and analyst notes
+- SHA-256 hashing for uploaded evidence
 - Chain-of-custody style metadata
-- JSON report export
-- CSV history export
+- Review policy thresholds for balanced, strict, or triage-only workflows
 - Forensic HTML report export
-- Local analysis history using browser storage
 
-## Detection Signals
+Use **Export History CSV** to download all recent analysis rows. Use
+**Clear History** to reset local saved runs.
 
-The baseline detector analyzes signals such as:
+## Investigation Workflow
 
-- Temporal smoothness
-- Noise consistency
-- Edge stability
-- Watermark or overlay presence
-- Compression-like block patterns
-- Flat-color distribution
-- Metadata-style evidence fields
+1. Enter a **Case ID** and **Analyst**.
+2. Choose a **Review policy**:
+   - Balanced review: default thresholds
+   - Strict investigation: lower threshold for suspicious findings
+   - Triage only: higher threshold to reduce low-priority flags
+3. Enter the **Evidence source**.
+4. Add analyst notes.
+5. Upload a photo or video, or generate a labeled synthetic test clip.
+6. Run analysis.
+7. Review the verdict, confidence, risk level, plugin signals, and evidence
+   hash.
+8. Export:
+   - JSON report for machine-readable records
+   - Forensic HTML report for human review
+   - CSV history for batch tracking
 
-For uploaded videos, the app samples frames across the clip and analyzes motion and frame consistency.
+Uploaded files are hashed locally with SHA-256 in the browser. The hash is
+stored in the JSON and forensic HTML reports.
 
-For uploaded images, the app analyzes still-image properties such as noise, edges, compression artifacts, and color distribution.
+The browser usually supports:
 
-## How To Use
+- Images: PNG, JPEG, WebP, and browser-supported still formats
+- Videos: MP4 and WebM are the safest choices
 
-1. Open `index.html` in a modern browser.
-2. Enter case information such as Case ID, analyst name, evidence source, and notes.
-3. Choose a review policy:
-   - Balanced review
-   - Strict investigation
-   - Triage only
-4. To generate a synthetic test clip:
-   - Choose a scene
-   - Choose duration and artifact level
-   - Click **Start Preview**
-   - Click **Record Clip**
-   - Click **Analyze Current Frames**
-5. To analyze a photo or video:
-   - Click **Choose File**
-   - Select an image or video
-   - Click **Analyze Upload**
-6. Review the verdict, confidence score, risk level, evidence hash, and detector signals.
-7. Export results using:
-   - **Download Report JSON**
-   - **Export Forensic Report**
-   - **Export History CSV**
+Uploaded media stays local to your browser. The app samples pixels and frames
+using browser APIs.
 
-## Supported Files
+If your browser blocks local recording APIs, run a local static server:
 
-Supported formats depend on the browser.
+```powershell
+python -m http.server 8080
+```
 
-Recommended formats:
+Then open:
 
-- Images: PNG, JPEG, WebP
-- Videos: MP4, WebM
+```text
+http://localhost:8080
+```
 
-## Reports
+## Safe Research Path
 
-The system can export three report types:
+Use this project to build detection algorithms against:
 
-### JSON Report
+- generated clips that are visibly and persistently labeled synthetic
+- images or videos of consenting participants
+- licensed datasets that explicitly allow synthetic-media research
+- public model outputs that are retained and disclosed according to the
+  provider's terms
 
-A machine-readable report containing:
+Do not use this project to impersonate real people, misrepresent live webcam
+feeds, remove provenance indicators, or bypass detection systems.
 
-- Scores
-- Verdict
-- Confidence
-- Risk level
-- Evidence metadata
-- Case metadata
-- Plugin signal results
-
-### Forensic HTML Report
-
-A human-readable report containing:
-
-- Case details
-- Analyst details
-- Evidence hash
-- Detection verdict
-- Risk level
-- Recommended action
-- Detector scores
-- Plugin explanations
-
-### CSV History
-
-A spreadsheet-friendly export of recent analysis runs.
-
-## Safety And Ethics
-
-This project is designed for synthetic media detection research and responsible media review.
-
-It should not be used to:
-
-- Impersonate real people
-- Create deceptive deepfakes
-- Remove watermarks or provenance labels
-- Bypass detection systems
-- Misrepresent synthetic media as real
-
-The synthetic clips generated by this project are visibly labeled as synthetic training videos.
-
-## Limitations
-
-This is a production-style prototype and local investigation workbench, not a legally validated forensic detector.
-
-A real-world enterprise deployment would require:
-
-- Validated machine learning models
-- Large real and synthetic datasets
-- Accuracy testing
-- False-positive and false-negative evaluation
-- Backend authentication
-- Encrypted evidence storage
-- Immutable audit logs
-- Human expert review
-- Legal and compliance validation
-
-## Project Structure
+## Project Layout
 
 ```text
 .
-|-- index.html
-|-- README.md
-|-- src
-|   |-- app.js
-|   |-- detector.js
-|   |-- evidence.js
-|   |-- generator.js
-|   |-- media-analyzer.js
-|   |-- recorder.js
-|   `-- report-store.js
-`-- styles
-    `-- main.css
+├── index.html
+├── src
+│   ├── app.js
+│   ├── detector.js
+│   ├── generator.js
+│   └── recorder.js
+└── styles
+    └── main.css
+```
+
+## Next Extensions
+
+- Add a consented-video ingestion pipeline.
+- Add model-provider adapters that preserve provenance and labels.
+- Add detector plugins for face/pose consistency, lighting consistency, and
+  audio/video sync.
+- Save experiment runs to a local database.
+
+## Enterprise Addendum
+
+This local build now includes enterprise-style case review controls:
+
+- Case ID, analyst name, evidence source, and analyst notes
+- Balanced, strict, and triage-only review policies
+- SHA-256 evidence hashing for uploaded files when browser Web Crypto is
+  available
+- Evidence integrity display in the report panel
+- Chain-of-custody style metadata inside exported JSON
+- Forensic HTML report export for human review
+- CSV history export for audit tracking
+
+For a real investigations deployment, connect this app to:
+
+- a validated trained detector model
+- authenticated user accounts
+- encrypted backend evidence storage
+- immutable audit logs
+- documented validation metrics such as precision, recall, and false-positive
+  rate

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Synthetic Webcam Detection Lab</title>
+    <link rel="stylesheet" href="styles/main.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Synthetic Webcam Detection Lab</p>
+        <h1>Generate labeled synthetic clips and test detector ideas.</h1>
+      </div>
+      <div class="status-pill" id="statusText">Idle</div>
+    </header>
+
+    <main class="layout">
+      <section class="stage" aria-label="Synthetic webcam preview">
+        <canvas id="webcamCanvas" width="1280" height="720"></canvas>
+      </section>
+
+      <aside class="panel" aria-label="Controls">
+        <h2>Clip Setup</h2>
+        <label>
+          Scene
+          <select id="sceneSelect">
+            <option value="plants">Woman watering plants</option>
+            <option value="reading">Person reading at desk</option>
+            <option value="coffee">Person making coffee</option>
+            <option value="laundry">Person folding laundry</option>
+          </select>
+        </label>
+
+        <label>
+          Duration
+          <select id="durationSelect">
+            <option value="8">8 seconds</option>
+            <option value="15">15 seconds</option>
+            <option value="30">30 seconds</option>
+          </select>
+        </label>
+
+        <label>
+          Webcam artifacts
+          <select id="artifactSelect">
+            <option value="moderate">Moderate</option>
+            <option value="low">Low</option>
+            <option value="high">High</option>
+          </select>
+        </label>
+
+        <div class="button-row">
+          <button id="startButton">Start Preview</button>
+          <button id="recordButton">Record Clip</button>
+          <button id="stopButton">Stop</button>
+        </div>
+
+        <div class="notice">
+          <strong>Safety boundary:</strong> every frame includes a synthetic
+          label and timestamp. This lab is for detection research, not
+          impersonation or detection evasion.
+        </div>
+      </aside>
+
+      <section class="case-panel">
+        <div class="section-heading">
+          <div>
+            <h2>Case Review Controls</h2>
+            <p>Evidence metadata, review policy, and analyst notes for auditable reports.</p>
+          </div>
+        </div>
+        <div class="case-grid">
+          <label>
+            Case ID
+            <input id="caseIdInput" type="text" placeholder="CASE-2026-001">
+          </label>
+          <label>
+            Analyst
+            <input id="analystInput" type="text" placeholder="Analyst name">
+          </label>
+          <label>
+            Review policy
+            <select id="policySelect">
+              <option value="balanced">Balanced review</option>
+              <option value="strict">Strict investigation</option>
+              <option value="lenient">Triage only</option>
+            </select>
+          </label>
+          <label>
+            Evidence source
+            <input id="sourceInput" type="text" placeholder="Device, URL, submitter, or dataset">
+          </label>
+          <label class="notes-field">
+            Analyst notes
+            <textarea id="notesInput" rows="4" placeholder="Observations, consent status, provenance notes, or follow-up tasks"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="analysis">
+        <div class="section-heading">
+          <h2>Detector Baseline</h2>
+          <button id="analyzeButton">Analyze Current Frames</button>
+        </div>
+        <div class="verdict-panel" id="verdictPanel">
+          <div>
+            <b>Verdict</b>
+            <span>Ready</span>
+          </div>
+          <div>
+            <b>Confidence</b>
+            <span>0%</span>
+          </div>
+          <div>
+            <b>Recommended Action</b>
+            <span>Run an analysis to generate a review recommendation.</span>
+          </div>
+        </div>
+        <div class="evidence-panel" id="evidencePanel">
+          <b>Evidence Integrity</b>
+          <span>No evidence hash recorded yet.</span>
+        </div>
+        <div class="score-grid" id="scoreGrid"></div>
+        <div class="plugin-grid" id="pluginGrid"></div>
+        <pre id="reportOutput">{ "status": "No analysis yet" }</pre>
+      </section>
+
+      <section class="upload-lab">
+        <div class="section-heading">
+          <div>
+            <h2>Analyze Uploaded Media</h2>
+            <p>Choose a local image or video. Files stay in this browser.</p>
+          </div>
+          <button id="analyzeUploadButton">Analyze Upload</button>
+        </div>
+        <div class="upload-controls">
+          <label>
+            Image or video file
+            <input id="mediaUpload" type="file" accept="image/*,video/*">
+          </label>
+          <div class="media-preview" id="mediaPreview">No upload selected</div>
+        </div>
+      </section>
+
+      <section class="exports">
+        <div class="section-heading">
+          <h2>Exports</h2>
+          <div class="toolbar">
+            <button id="downloadReportButton">Download Report JSON</button>
+            <button id="downloadForensicButton">Export Forensic Report</button>
+            <button id="downloadCsvButton">Export History CSV</button>
+            <button id="clearHistoryButton">Clear History</button>
+          </div>
+        </div>
+        <div id="downloadArea" class="download-area">
+          Recorded clips and reports will appear here.
+        </div>
+        <div class="history-table-wrap">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Media</th>
+                <th>Source</th>
+                <th>Verdict</th>
+                <th>Risk</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody">
+              <tr>
+                <td colspan="6">No saved analyses yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="src/generator.js"></script>
+    <script src="src/detector.js"></script>
+    <script src="src/recorder.js"></script>
+    <script src="src/media-analyzer.js"></script>
+    <script src="src/report-store.js"></script>
+    <script src="src/evidence.js"></script>
+    <script src="src/app.js"></script>
+  </body>
+</html>
